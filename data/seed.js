@@ -44,7 +44,7 @@ async function clearDB(){
     }
 }
 
-// console.log(process.argv[2])
+console.log('desde el archivo seed',process.argv[2])
 
 if(process.argv[2] === '--import'){
 
