@@ -4,7 +4,9 @@ import {db} from './config/db.js'
 import colors from 'colors'
 import dotenv from 'dotenv'
 import servicesRoutes from './routes/ServicesRoutes.js'
+import autRoutes from './routes/authRoutes.js'
 import cors from "cors"
+
 
 // variables de entorno
 
@@ -26,7 +28,8 @@ db()
 console.log('argumento 2 desde el index.js',process.argv[2])
 // quitar undefined antes de hacer el deployment
 const whitelist = [process.env.FRONTEND_URL]
-
+// al poner undefined puedo ver en el cliente y en postman el llamado 
+// a las apis
 if(process.argv[2] === '--postman'){
     whitelist.push(undefined)
 }
@@ -48,6 +51,7 @@ app.use(cors(corsOptions))
 // definir ruta
 
 app.use('/api/services', servicesRoutes)
+app.use('/api/auth', autRoutes)
 
 // definir puerto
 

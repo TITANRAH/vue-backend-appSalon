@@ -59,13 +59,14 @@ const getServiceById = async (req, res) => {
   // o el codigo dara error
   if (validateObjectId(id, res)) return;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    const error = new Error("El id no es valido");
-    // al póner return hasta aca se ejecuta este codigo si es que los cambpos son vacios
-    return res.status(400).json({
-      msg: error.message,
-    });
-  }
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   const error = new Error("El id no es valido");
+  //   // al póner return hasta aca se ejecuta este codigo si es que los cambpos son vacios
+  //   return res.status(400).json({
+  //     msg: error.message,
+  //   });
+  // }
+  
   // validar que exista el servicio con ese id
   const service = await Services.findById(id);
   // console.log(service)
@@ -83,6 +84,8 @@ const updateService = async (req, res) => {
   // extraigo de req.params el id
   const { id } = req.params;
 
+  // si hay un error retorna y detiene el codigo
+  // la funcion retorna un error dentro de ella 
   if (validateObjectId(id, res)) return;
 
   // validar que exista el servicio con ese id
