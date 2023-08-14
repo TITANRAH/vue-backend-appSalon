@@ -86,7 +86,7 @@ const verifyAccount = async (req, res) => {
         // eliminamos el token por que estara visible en la url del usuario
         user.token = ''
         await user.save();
-        res.json({msg: 'Usuario confirmado correctamentes'})
+        res.json({msg: 'Usuario confirmado correctamente'})
     } catch (error) {
         
     }
