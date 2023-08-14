@@ -55,6 +55,15 @@ userSchema.pre('save', async function (next){
 })
 // el nombre del archivo en base de datos que contendra usuarios se llamara aqui User 
 // pero mongo convierte todo a minusculas y le pone una s y queda users
+
+// comprobacion de password hacheado con password plano para login
+
+ userSchema.methods.checkPassword = async function(inputPassword){
+    
+    // ira a la instancia del usuario haciendo login a buscar la columna password eso es this.password
+  return await bcrypt.compare(inputPassword, this.password)
+ }
+
 const User = mongoose.model('User', userSchema)
 
 export default User

@@ -92,7 +92,45 @@ const verifyAccount = async (req, res) => {
     }
 }
 
+
+const login = async (req, res) => {
+
+    // extraemoos del body email y password
+    const {email, password} = req.body
+    //revisar que el usuariuo exiota
+    const user = await User.findOne({
+       email 
+    })
+
+    if(!user){
+        const error = new Error('El usuario no existe')
+        
+        // el 401 indica que el prblema fueron las credenciales
+        return res.status(401).json({msg: error.message})
+    }
+    //revisar si confirmo la cuenta verified es un camppo
+    if(!user.verified){
+        const error = new Error('Tu cuenta aún no ha sido verificada')
+        
+        // el 401 indica que el prblema fueron las credenciales
+        return res.status(401).json({msg: error.message})
+    }
+
+    // comporbar password
+    // accedo al metodo creado en el modelo user checkpassword es un metodocreado en user model
+    if(await user.checkPassword(password)) {
+        res.json({
+           msg: 'Usuario autenticado' 
+        })
+    } else {
+        const error = new Error('El password es incorrecto')    
+        // el 401 indica que el prblema fueron las credenciales
+        return res.status(401).json({msg: error.message})
+    }
+
+}
 export {
     register,
-    verifyAccount
+    verifyAccount,
+    login
 }
