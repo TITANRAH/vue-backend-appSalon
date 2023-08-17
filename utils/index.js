@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from 'jsonwebtoken'
 
 function validateObjectId(id, res) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -23,8 +24,18 @@ const uniqueId = () => {
   return Date.now().toString(32) + Math.random().toString(32).substring(2);
 };
 
+const generateJWT = (id) => {
+  // guardare el id
+  const token = jwt.sign({id}, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  })
+
+  return token;
+}
+
 export { 
   validateObjectId, 
   handleNotFoundError, 
-  uniqueId 
+  uniqueId,
+  generateJWT
 };

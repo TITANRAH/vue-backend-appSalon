@@ -1,11 +1,11 @@
 // const express = require('express')
+import colors from 'colors';
+import cors from "cors";
+import dotenv from 'dotenv';
 import express from 'express';
-import {db} from './config/db.js'
-import colors from 'colors'
-import dotenv from 'dotenv'
-import servicesRoutes from './routes/ServicesRoutes.js'
-import autRoutes from './routes/authRoutes.js'
-import cors from "cors"
+import { db } from './config/db.js';
+import servicesRoutes from './routes/ServicesRoutes.js';
+import autRoutes from './routes/authRoutes.js';
 
 
 // variables de entorno

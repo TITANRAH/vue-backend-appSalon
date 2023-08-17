@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import {sendEmailVerification} from "../emails/authEmailService.js"
+import { generateJWT } from "../utils/index.js";
 
 
 const register = async (req, res) => {
@@ -119,8 +120,11 @@ const login = async (req, res) => {
     // comporbar password
     // accedo al metodo creado en el modelo user checkpassword es un metodocreado en user model
     if(await user.checkPassword(password)) {
+        // generador de tokens desde utils
+        const token = generateJWT(user._id)
+        console.log('token', token)
         res.json({
-           msg: 'Usuario autenticado' 
+           token 
         })
     } else {
         const error = new Error('El password es incorrecto')    
