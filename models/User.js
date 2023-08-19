@@ -27,6 +27,7 @@ const userSchema = mongoose.Schema({
     // id unico para el usuario random creado en utils
     // lo enviaremos por email
     // autenticamos en la base de datos y confirmamos la cuenta
+    // con ese uniqueID() creamos un TOKEN DE VERIFICACION QUE NO ES JWT
     default: () => uniqueId()
   },
   // cuando un usuario se genere en la base de datos

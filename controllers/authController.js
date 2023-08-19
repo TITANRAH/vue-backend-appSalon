@@ -133,8 +133,19 @@ const login = async (req, res) => {
     }
 
 }
+
+const user = async (req, res) => {
+
+// console.log('desde user usuario encontrado que paso por el authMiddleware ->', req.user)
+
+const {user} = req;
+res.json(user)
+}
+
+
 export {
     register,
     verifyAccount,
-    login
+    login,
+    user
 }

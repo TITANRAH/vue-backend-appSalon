@@ -19,7 +19,7 @@ function handleNotFoundError(message, res) {
   });
 }
 
-// creamos un random que importamos luego en el modelo deuser
+// creamos un random que importamos luego en el modelo deuser conb esto creamos el TOKEN DE VERIFICACION 
 const uniqueId = () => {
   return Date.now().toString(32) + Math.random().toString(32).substring(2);
 };
