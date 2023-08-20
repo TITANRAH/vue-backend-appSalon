@@ -6,7 +6,7 @@ import express from 'express';
 import { db } from './config/db.js';
 import servicesRoutes from './routes/ServicesRoutes.js';
 import autRoutes from './routes/authRoutes.js';
-import appointmentsRoutes from './routes/authRoutes.js';
+import appointmentsRoutes from './routes/appointmentsRoutes.js';
 
 
 // variables de entorno
