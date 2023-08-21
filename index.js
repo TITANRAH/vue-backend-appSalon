@@ -7,6 +7,7 @@ import { db } from './config/db.js';
 import servicesRoutes from './routes/ServicesRoutes.js';
 import autRoutes from './routes/authRoutes.js';
 import appointmentsRoutes from './routes/appointmentsRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 
 // variables de entorno
@@ -54,6 +55,7 @@ app.use(cors(corsOptions))
 app.use('/api/services', servicesRoutes)
 app.use('/api/auth', autRoutes)
 app.use('/api/appointments', appointmentsRoutes)
+app.use('/api/users', userRoutes)
 
 
 // definir puerto
