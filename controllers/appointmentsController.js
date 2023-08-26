@@ -1,5 +1,7 @@
 import Appointment from "../models/Appointment.js";
 import {parse, formatISO, startOfDay, endOfDay, isValid } from 'date-fns'
+import { validateObjectId, handleNotFoundError, formateDate } from "../utils/index.js";
+import { sendEmailAppointment, sendEmailUpdateAppointment, sendEmailDeleteAppointment } from "../emails/appointmentsEmailService.js";
 
 
 const createAppointment = async (req, res) => {
@@ -14,7 +16,11 @@ const createAppointment = async (req, res) => {
     try {
 
         const newAppointment = new Appointment(appointment)
-        await newAppointment.save()
+       const result = await newAppointment.save()
+        await sendEmailAppointment({
+            date: formateDate(result.date) ,
+            time: result.time
+        })
 
         res.json({
             msg: 'Tu reservación se realizó correctamente'
@@ -62,7 +68,121 @@ const getAppointmentsByDate = async (req, res) =>{
 
 }   
 
+// al igual que con las fechas uysaremos esto para obtener la cita por id 
+// para la edicion
+const getAppointmentsById = async (req, res) => {
+    const {id} = req.params
+
+    // validar por Object id
+    if(validateObjectId(id, res)) return
+
+    // validar que exista la cita
+    const appointment = await Appointment.findById(id).populate('services')
+    if(!appointment){
+        return handleNotFoundError('La cita no existe', res)
+    }
+
+    // el usuario autentcado y el del req son distintos 
+    // por si abro la url en otro naveggador hayq ue prevenir que eso pase
+    console.log(appointment.user)
+    console.log(req.user._id)
+    
+    if(appointment.user.toString() !== req.user._id.toString()){
+        const error = new Error('No tienes los permisos')
+        return res.status(403).json({msg: error.message})
+    }
+    // retornar la cita
+    res.json(appointment)
+}
+
+
+const updateAppointment = async (req, res) => {
+    const {id} = req.params
+
+    // validar por Object id
+    if(validateObjectId(id, res)) return
+
+    // validar que exista la cita
+    const appointment = await Appointment.findById(id).populate('services')
+    if(!appointment){
+        return handleNotFoundError('La cita no existe', res)
+    }
+
+    // el usuario autentcado y el del req son distintos 
+    // por si abro la url en otro naveggador hayq ue prevenir que eso pase
+    console.log(appointment.user)
+    console.log(req.user._id)
+    
+    if(appointment.user.toString() !== req.user._id.toString()){
+        const error = new Error('No tienes los permisos')
+        return res.status(403).json({msg: error.message})
+    }
+
+    const {date, time, totalAmount, services} = req.body
+    appointment.date = date
+    appointment.time = time
+    appointment.totalAmount = totalAmount
+    appointment.services = services
+
+    try {
+        const result = await appointment.save()
+        await sendEmailUpdateAppointment({
+            date: formateDate(result.date) ,
+            time: result.time
+        })
+        res.json({
+            msg: 'Cita actualizada correctamente'
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const deleteAppointment = async (req, res) => {
+    console.log('delete')
+
+    const {id} = req.params
+
+    // validar por Object id
+    if(validateObjectId(id, res)) return
+
+    // validar que exista la cita
+    const appointment = await Appointment.findById(id).populate('services')
+    if(!appointment){
+        return handleNotFoundError('La cita no existe', res)
+    }
+
+    // el usuario autentcado y el del req son distintos 
+    // por si abro la url en otro naveggador hayq ue prevenir que eso pase
+    console.log(appointment.user)
+    console.log(req.user._id)
+    
+    if(appointment.user.toString() !== req.user._id.toString()){
+        const error = new Error('No tienes los permisos')
+        return res.status(403).json({msg: error.message})
+    }
+
+    try {
+
+        console.log('delete')
+        const result = await appointment.deleteOne()
+        await sendEmailDeleteAppointment({
+            date: formateDate(result.date) ,
+            time: result.time
+        })
+        res.json({msg:'Cita cancelada exitósamente'})
+
+
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
     createAppointment,
-    getAppointmentsByDate
+    getAppointmentsByDate,
+    getAppointmentsById,
+    updateAppointment,
+    deleteAppointment
 }

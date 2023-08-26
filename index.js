@@ -57,7 +57,6 @@ app.use('/api/auth', autRoutes)
 app.use('/api/appointments', appointmentsRoutes)
 app.use('/api/users', userRoutes)
 
-
 // definir puerto
 
 

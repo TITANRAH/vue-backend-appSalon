@@ -16,18 +16,20 @@ const getUserAppointments = async (req, res) => {
         return res.status(400).json({msg: error.message})
     }
     try {
-        const appointments = await Appointment.find({
-        //    como son iguales puedo poner solo user
-             user,
-             date:{
-                // esto solo retorna las citas a futuro no las anteriores a la fecha actual
-                $gte: new Date()
-             }
-            //  este populate lo que hace es traerse la informacion de los servicios 
-            //  completa como en el modelo de appointments le estamos pasando el id de servicio 
-            //  asi puedo traer la info completa de cada servicio
-            // ordeno la colimna que quiera y desc o asc
-        }).populate('services').sort({date: 'asc'})
+
+        const query = req.user.admin ? {date: {$gte: new Date()}} : {
+            //    como son iguales puedo poner solo user
+                 user,
+                 date:{
+                    // esto solo retorna las citas a futuro no las anteriores a la fecha actual
+                    $gte: new Date()
+                 }
+                //  este populate lo que hace es traerse la informacion de los servicios 
+                //  completa como en el modelo de appointments le estamos pasando el id de servicio 
+                //  asi puedo traer la info completa de cada servicio
+                // ordeno la colimna que quiera y desc o asc
+            } 
+        const appointments = await Appointment.find(query).populate('services').populate({path: 'user', select:'name email'}).sort({date: 'asc'})
 
         res.json(appointments)
         
